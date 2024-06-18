@@ -6,6 +6,7 @@ import {NavbarComponent} from "./components/navbar/navbar.component";
 import {AuthenticationModule} from "./authentication.module";
 import {BrowserModule} from "@angular/platform-browser";
 import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
+import {CoreRoutingModule} from "./core-routing.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,7 +15,8 @@ import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
     BrowserModule,
     RouterOutlet,
     NavbarComponent,
-    AuthenticationModule
+    AuthenticationModule,
+    CoreRoutingModule
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi())

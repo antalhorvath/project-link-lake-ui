@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {NgClass} from "@angular/common";
+import {RouterLink} from "@angular/router";
 
 interface MenuItem {
   name: string;
@@ -10,7 +11,8 @@ interface MenuItem {
   selector: 'app-menu-items',
   standalone: true,
   imports: [
-    NgClass
+    NgClass,
+    RouterLink
   ],
   templateUrl: './menu-items.component.html',
 })
