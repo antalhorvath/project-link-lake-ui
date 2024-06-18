@@ -1,10 +1,13 @@
 import {AfterViewInit, Component, EventEmitter, Output} from '@angular/core';
 import {Dropdown} from "flowbite";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-user-profile-context',
   standalone: true,
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   templateUrl: './user-profile-context.component.html',
 })
 export class UserProfileContextComponent implements AfterViewInit {
