@@ -3,8 +3,9 @@ import {MobileHamburgerMenuComponent} from "./mobile-hamburger-menu/mobile-hambu
 import {UserProfileContextComponent} from "./user-profile-context/user-profile-context.component";
 import {SignUpInButtonsComponent} from "./sign-up-in-buttons/sign-up-in-buttons.component";
 import {MenuItemsComponent} from "./menu-items/menu-items.component";
-import {BehaviorSubject, map} from "rxjs";
+import {map, Observable} from "rxjs";
 import {AsyncPipe, NgIf} from "@angular/common";
+import {AuthService} from "@auth0/auth0-angular";
 
 @Component({
   selector: 'app-navbar',
@@ -15,21 +16,23 @@ import {AsyncPipe, NgIf} from "@angular/common";
     SignUpInButtonsComponent,
     MenuItemsComponent,
     AsyncPipe,
-    NgIf,
+    NgIf
   ],
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  templateUrl: './navbar.component.html'
 })
 export class NavbarComponent {
 
-  isSignedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  isSignedIn: Observable<boolean> = this.auth.isAuthenticated$;
   isAnonymous = this.isSignedIn.pipe(map(v => !v));
 
+  constructor(public auth: AuthService) {
+  }
+
   signIn() {
-    this.isSignedIn.next(true);
+    this.auth.loginWithRedirect();
   }
 
   signOut() {
-    this.isSignedIn.next(false);
+    this.auth.logout();
   }
 }
