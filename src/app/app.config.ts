@@ -5,6 +5,10 @@ import {routes} from './app.routes';
 import {AuthHttpInterceptor, AuthModule} from "@auth0/auth0-angular";
 import {authConfig} from "../enviroments/environment.local";
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
+import {provideStore} from '@ngrx/store';
+import {metaReducers, reducers} from './reducers';
+import {provideEffects} from '@ngrx/effects';
+import {provideRouterStore} from '@ngrx/router-store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +26,9 @@ export const appConfig: ApplicationConfig = {
     {
       provide: Window,
       useValue: window,
-    }
+    },
+    provideStore(reducers, {metaReducers}),
+    provideEffects(),
+    provideRouterStore()
   ]
 };
