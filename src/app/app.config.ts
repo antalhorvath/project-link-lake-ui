@@ -29,7 +29,7 @@ export const appConfig: ApplicationConfig = {
       useValue: window,
     },
     provideStore(reducers, {metaReducers}),
-    provideEffects(),
+    provideEffects([]),
     provideRouterStore(),
     provideStoreDevtools({maxAge: 25, logOnly: !isDevMode()})
   ]
