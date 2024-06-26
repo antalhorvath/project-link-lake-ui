@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {Observable} from "rxjs";
+import {Injectable} from '@angular/core';
+import {map, Observable} from "rxjs";
 import {Link} from "./state/link.model";
 import {HttpClient} from "@angular/common/http";
 
@@ -8,9 +8,15 @@ import {HttpClient} from "@angular/common/http";
 })
 export class LinkService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   loadLinks(): Observable<Link[]> {
     return this.http.get<Link[]>('/api/links');
+  }
+
+  addLink(link: Link): Observable<Link> {
+    return this.http.put(`/api/links/${link.linkId}`, {name: link.name, link: link.link})
+      .pipe(map(() => link));
   }
 }

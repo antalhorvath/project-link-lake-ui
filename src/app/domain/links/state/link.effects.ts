@@ -19,6 +19,18 @@ export class LinkEffects {
     );
   });
 
+  addLink$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkPageActions.addLink),
+      concatMap((action) =>
+      this.linkService.addLink(action.link).pipe(
+        map((link) => LinkApiEvents.addLinkSuccess({link}),
+        catchError(error => of(LinkApiEvents.loadLinksFailure({error: this.unpackError(error)}))))
+      )
+      )
+    )
+  });
+
   constructor(private actions$: Actions,
               private linkService: LinkService) {
   }
