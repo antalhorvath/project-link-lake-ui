@@ -3,7 +3,7 @@
   <div class="mb-5">
     <form-field [hasError]="hasError('link')">
       <label for="link">Link</label>
-      <input id="link" type="text" formControlName="link" autofocus="true">
+      <input id="link" type="text" formControlName="link" autofocus>
       <p>{{ getErrorMessage('link') }}</p>
     </form-field>
   </div>
@@ -18,10 +18,12 @@
 
   <button type="submit"
           [disabled]="linkForm.invalid"
-          [ngClass]="linkForm.invalid ? 'cursor-not-allowed': ''"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
+          [ngClass]="linkForm.valid
+          ? 'bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700'
+          : 'bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-700 cursor-not-allowed'"
+          class="text-white focus:ring-4 focus:outline-none
           focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5
-          text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit
+          text-center dark:focus:ring-blue-800">Submit
   </button>
 
 </form>

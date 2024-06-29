@@ -5,9 +5,10 @@ import {CustomValidators} from "../../../shared/util/custom.validators";
 import {NgClass} from "@angular/common";
 import {simpleUuid} from "../../../shared/util/uuid.helper";
 import {Store} from "@ngrx/store";
-import {LinkState,} from "../state/link.reducer";
+import {LinkState} from "../state/link.reducer";
 import {LinkPageActions} from "../state/link.actions";
 import {Link} from "../state/link.model";
+
 
 @Component({
   selector: 'app-edit-link',
@@ -18,11 +19,21 @@ import {Link} from "../state/link.model";
 })
 export class EditLinkComponent {
 
+  genericErrorMessages: { [index: string]: string } = {
+    required: 'Required'
+  }
+
+  fieldErrorMessages: { [index: string]: { [index: string]: string } } = {
+    link: {
+      validUrl: 'Link must be a valid URL'
+    }
+  }
+
   linkForm = this.formBuilder.group({
     linkId: [simpleUuid()],
     name: ['', Validators.required],
     link: ['', {
-      validators: [Validators.required, CustomValidators.ValidUrl],
+      validators: [Validators.required, CustomValidators.validUrl],
       updateOn: 'blur'
     }
     ]
@@ -44,7 +55,8 @@ export class EditLinkComponent {
   getErrorMessage(fieldName: string): string {
     const field = this.linkForm.get(fieldName);
     if (field?.errors) {
-      return field?.errors['validUrl'];
+      const validationError = Object.keys(field.errors)[0];
+      return this.fieldErrorMessages[fieldName]?.[validationError] ?? this.genericErrorMessages[validationError];
     } else {
       return 'Invalid input';
     }
