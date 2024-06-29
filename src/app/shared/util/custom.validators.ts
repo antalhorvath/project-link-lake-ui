@@ -2,7 +2,7 @@ import {ValidatorFn} from "@angular/forms";
 
 export class CustomValidators {
 
-  public static readonly ValidUrl:  ValidatorFn = control => {
+  public static readonly validUrl:  ValidatorFn = control => {
     if (!control.value) {
       return null;
     }

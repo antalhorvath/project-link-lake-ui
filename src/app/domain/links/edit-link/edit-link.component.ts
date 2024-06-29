@@ -9,6 +9,7 @@ import {LinkState} from "../state/link.reducer";
 import {LinkPageActions} from "../state/link.actions";
 import {Link} from "../state/link.model";
 
+
 @Component({
   selector: 'app-edit-link',
   standalone: true,
@@ -18,17 +19,28 @@ import {Link} from "../state/link.model";
 })
 export class EditLinkComponent {
 
+  genericErrorMessages: { [index: string]: string } = {
+    required: 'Required'
+  }
+
+  fieldErrorMessages: { [index: string]: { [index: string]: string } } = {
+    link: {
+      validUrl: 'Link must be a valid URL'
+    }
+  }
+
   linkForm = this.formBuilder.group({
     linkId: [simpleUuid()],
     name: ['', Validators.required],
     link: ['', {
-      validators: [Validators.required, CustomValidators.ValidUrl],
+      validators: [Validators.required, CustomValidators.validUrl],
       updateOn: 'blur'
     }
     ]
   });
 
-  constructor(private formBuilder: FormBuilder, private store: Store<LinkState>) {
+  constructor(private formBuilder: FormBuilder,
+              private store: Store<LinkState>) {
   }
 
   hasError(fieldName: string): boolean {
@@ -43,7 +55,8 @@ export class EditLinkComponent {
   getErrorMessage(fieldName: string): string {
     const field = this.linkForm.get(fieldName);
     if (field?.errors) {
-      return field?.errors['validUrl'];
+      const validationError = Object.keys(field.errors)[0];
+      return this.fieldErrorMessages[fieldName]?.[validationError] ?? this.genericErrorMessages[validationError];
     } else {
       return 'Invalid input';
     }
@@ -57,8 +70,7 @@ export class EditLinkComponent {
         name: link.name ?? '',
         link: link.link ?? ''
       };
-      console.log('submit')
-      this.store.dispatch(LinkPageActions.addLink({link: linkToAdd}))
+      this.store.dispatch(LinkPageActions.addLink({link: linkToAdd}));
     }
   }
 }
