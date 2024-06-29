@@ -5,7 +5,7 @@ import {CustomValidators} from "../../../shared/util/custom.validators";
 import {NgClass} from "@angular/common";
 import {simpleUuid} from "../../../shared/util/uuid.helper";
 import {Store} from "@ngrx/store";
-import {LinkState} from "../state/link.reducer";
+import {LinkState,} from "../state/link.reducer";
 import {LinkPageActions} from "../state/link.actions";
 import {Link} from "../state/link.model";
 
@@ -28,7 +28,8 @@ export class EditLinkComponent {
     ]
   });
 
-  constructor(private formBuilder: FormBuilder, private store: Store<LinkState>) {
+  constructor(private formBuilder: FormBuilder,
+              private store: Store<LinkState>) {
   }
 
   hasError(fieldName: string): boolean {
@@ -57,8 +58,7 @@ export class EditLinkComponent {
         name: link.name ?? '',
         link: link.link ?? ''
       };
-      console.log('submit')
-      this.store.dispatch(LinkPageActions.addLink({link: linkToAdd}))
+      this.store.dispatch(LinkPageActions.addLink({link: linkToAdd}));
     }
   }
 }

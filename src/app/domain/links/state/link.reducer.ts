@@ -7,6 +7,7 @@ export const linksFeatureKey = 'links';
 
 export interface LinkState extends EntityState<Link> {
   // additional entities state properties
+  isLoading: boolean;
   error: string;
 }
 
@@ -18,35 +19,56 @@ export const adapter: EntityAdapter<Link> = createEntityAdapter<Link>(
 
 export const initialState: LinkState = adapter.getInitialState({
   // additional entity state properties
+  isLoading: false,
   error: ''
 });
 
-const onApiSuccessEvents : ReducerTypes<LinkState, readonly ActionCreator[]>[] = [
+const onApiSuccessEvents: ReducerTypes<LinkState, readonly ActionCreator[]>[] = [
   on(LinkApiEvents.loadLinksSuccess,
-    (state, action) => adapter.setAll(action.links, state)
+    (state, action) => adapter.setAll(action.links, {
+      ...state,
+      isLoading: false,
+      error: ''
+    })
   ),
   on(LinkApiEvents.addLinkSuccess,
-    (state, action) => adapter.addOne(action.link, state)
+    (state, action) => adapter.addOne(action.link, {
+      ...state,
+      isLoading: false,
+      error: ''
+    })
   ),
   on(LinkApiEvents.updateLinkSuccess,
-    (state, action) => adapter.updateOne(action.link, state)
+    (state, action) => adapter.updateOne(action.link, {
+      ...state,
+      isLoading: false,
+      error: ''
+    })
   )
 ];
 
-const onApiFailureEvents : ReducerTypes<LinkState, readonly ActionCreator[]>[] = [
+const onApiFailureEvents: ReducerTypes<LinkState, readonly ActionCreator[]>[] = [
   on(LinkApiEvents.loadLinksFailure,
     LinkApiEvents.addLinkFailure,
     LinkApiEvents.updateLinkFailure,
     LinkApiEvents.deleteLinkFailure,
-    (state, action) => ({...state, error: action.error}))
+    (state, action) => ({
+      ...state,
+      isLoading: false,
+      error: action.error
+    }))
 ];
 
-const onPageActions : ReducerTypes<LinkState, readonly ActionCreator[]>[] = [
+const onPageActions: ReducerTypes<LinkState, readonly ActionCreator[]>[] = [
   on(LinkPageActions.loadLinks,
     LinkPageActions.addLink,
     LinkPageActions.updateLink,
     LinkPageActions.deleteLink,
-    (state, action) => ({...state, error: ''})),
+    (state, action) => ({
+      ...state,
+      isLoading: true,
+      error: ''
+    })),
 ];
 
 export const reducer = createReducer(

@@ -1,4 +1,4 @@
-import {ComponentFixture, ComponentFixtureAutoDetect, TestBed} from "@angular/core/testing";
+import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {ListLinksComponent} from "./list-links.component";
 import {MockStore, provideMockStore} from "@ngrx/store/testing";
 import {linksFeature} from "../state/link.reducer";

@@ -5,11 +5,19 @@ import {Observable, of, throwError} from 'rxjs';
 import {LinkEffects} from './link.effects';
 import {LinkService} from "../link.service";
 import {LinkApiEvents, LinkPageActions} from "./link.actions";
+import {Component} from "@angular/core";
+import {Location} from "@angular/common";
+import {provideRouter} from '@angular/router';
+
+@Component({template: ''})
+class DummyComponent {
+}
 
 describe('LinkEffects', () => {
   let actions$: Observable<any>;
   let effects: LinkEffects;
   let service: jasmine.SpyObj<LinkService>;
+  let location: Location;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -19,19 +27,22 @@ describe('LinkEffects', () => {
         {
           provide: LinkService,
           useValue: jasmine.createSpyObj('LinkService', ['loadLinks']),
-        }
+        },
+        provideRouter([
+          {path: 'links', component: DummyComponent}
+        ])
       ]
     });
-
     effects = TestBed.inject(LinkEffects);
     service = TestBed.inject(LinkService) as jasmine.SpyObj<LinkService>;
+    location = TestBed.inject(Location);
   });
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('loadLinks', () => {
+  describe('on load links page action', () => {
     it('dispatches success', (done) => {
       actions$ = of(LinkPageActions.loadLinks());
 
@@ -58,6 +69,21 @@ describe('LinkEffects', () => {
         expect(action).toEqual(LinkApiEvents.loadLinksFailure({error: apiErrorMessage}));
         done();
       })
+    });
+  });
+
+
+  describe('on add links success API event', () => {
+
+    it('redirects to list of links', (done) => {
+      const link = {linkId: 'id', name: 'test link', link: 'https://test.com'};
+
+      actions$ = of(LinkApiEvents.addLinkSuccess({link}));
+
+      effects.addLinkSuccess$.subscribe(() => {
+        expect(location.path()).toBe('/links');
+        done();
+      });
     });
   });
 
