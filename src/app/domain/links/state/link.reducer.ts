@@ -17,12 +17,6 @@ export const adapter: EntityAdapter<Link> = createEntityAdapter<Link>(
   }
 );
 
-export const initialState: LinkState = adapter.getInitialState({
-  // additional entity state properties
-  isLoading: false,
-  error: ''
-});
-
 const onApiSuccessEvents: ReducerTypes<LinkState, readonly ActionCreator[]>[] = [
   on(LinkApiEvents.loadLinksSuccess,
     (state, action) => adapter.setAll(action.links, {
@@ -70,6 +64,12 @@ const onPageActions: ReducerTypes<LinkState, readonly ActionCreator[]>[] = [
       error: ''
     })),
 ];
+
+export const initialState: LinkState = adapter.getInitialState({
+  // additional entity state properties
+  isLoading: false,
+  error: ''
+});
 
 export const reducer = createReducer(
   initialState,
