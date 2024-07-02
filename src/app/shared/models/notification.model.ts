@@ -1,4 +1,4 @@
-export interface ToastMessageModel {
+export interface NotificationModel {
   type: 'info' | 'error';
   message: string;
 }

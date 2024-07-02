@@ -1,11 +1,11 @@
 import {isDevMode} from '@angular/core';
 import {ActionReducerMap, createReducer, MetaReducer, on} from '@ngrx/store';
-import {ToastMessageModel} from "../shared/components/toast-message/toast-message.model";
-import {ShowToastMessage} from "./root.actions";
+import {NotificationModel} from "../shared/models/notification.model";
+import {Notification} from "./root.actions";
 import {state} from "@angular/animations";
 
 export interface RootState {
-  currentNotification?: ToastMessageModel;
+  currentNotification?: NotificationModel;
 }
 
 export const initialState: RootState = {
@@ -18,7 +18,7 @@ export interface AppState {
 
 export const reducer = createReducer(
   initialState,
-  on(ShowToastMessage, (state, action) => ({
+  on(Notification, (state, action) => ({
     ...state,
     currentNotification: action.notification
   }))

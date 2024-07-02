@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, delay, map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {of, switchMap} from 'rxjs';
 import {LinkApiEvents, LinkPageActions} from './link.actions';
 import {LinkService} from "../link.service";
 import {Router} from "@angular/router";
-import {ShowToastMessage} from "../../../reducers/root.actions";
+import {Notification} from "../../../reducers/root.actions";
 
 @Injectable()
 export class LinkEffects {
@@ -34,16 +34,41 @@ export class LinkEffects {
     )
   });
 
+  addLinkSuccessToRedirect$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkApiEvents.addLinkSuccess),
+      switchMap(() => this.router.navigate(['/links']))
+    );
+  }, {
+    dispatch: false
+  });
+
   addLinkSuccess$ = createEffect(() => {
       return this.actions$.pipe(
         ofType(LinkApiEvents.addLinkSuccess),
-        switchMap(() => {
-          this.router.navigate(['/links']);
-          return of(ShowToastMessage({notification: {type: 'info', message: 'Link has been saved'}}));
-        })
+        switchMap(() => of(Notification({
+            notification: {
+              type: 'info',
+              message: 'Link has been added.'
+            }
+          })
+        ))
       );
     }
   );
+
+  addLinkFailure$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkApiEvents.addLinkFailure),
+      switchMap(() => of(Notification({
+          notification: {
+            type: 'error',
+            message: 'Failed to add link.'
+          }
+        }))
+      )
+    );
+  })
 
   constructor(private actions$: Actions,
               private linkService: LinkService,

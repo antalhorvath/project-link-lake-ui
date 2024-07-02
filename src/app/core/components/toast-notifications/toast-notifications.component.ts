@@ -12,7 +12,7 @@ import {AppState} from "../../../reducers";
 import {ToastMessageComponent} from "../../../shared/components/toast-message/toast-message.component";
 import {selectCurrentNotification} from "../../../reducers/root.selectors";
 import {filter} from "rxjs/operators";
-import {ToastMessageModel} from "../../../shared/components/toast-message/toast-message.model";
+import {NotificationModel} from "../../../shared/models/notification.model";
 
 @Component({
   selector: 'app-toast-notifications',
@@ -41,7 +41,7 @@ export class ToastNotificationsComponent implements OnInit {
       });
   }
 
-  private createToastMessage(toastMessage: ToastMessageModel) {
+  private createToastMessage(toastMessage: NotificationModel) {
     const component = this.container.createComponent<ToastMessageComponent>(ToastMessageComponent);
     component.instance.type = toastMessage?.type ?? '';
     component.instance.message = toastMessage?.message ?? '';
