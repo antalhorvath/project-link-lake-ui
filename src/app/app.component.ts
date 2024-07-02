@@ -6,8 +6,8 @@ import {ToastMessageComponent} from "./shared/components/toast-message/toast-mes
 import {ToastNotificationsComponent} from "./core/components/toast-notifications/toast-notifications.component";
 import {Store} from "@ngrx/store";
 import {RootState} from "./reducers";
-import {ShowToastMessage} from "./reducers/root.actions";
-import {ToastMessageModel} from "./shared/components/toast-message/toast-message.model";
+import {Notification} from "./reducers/root.actions";
+import {NotificationModel} from "./shared/models/notification.model";
 
 @Component({
   selector: 'app-root',
@@ -27,11 +27,11 @@ export class AppComponent implements OnInit {
   }
 
   pushit() {
-    const notification: ToastMessageModel = {
+    const notification: NotificationModel = {
       type: 'info',
       message: 'asdsadsa'
     };
 
-    this.store.dispatch(ShowToastMessage({notification}))
+    this.store.dispatch(Notification({notification}))
   }
 }

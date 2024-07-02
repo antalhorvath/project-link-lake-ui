@@ -1,4 +1,4 @@
 import {createAction, props} from "@ngrx/store";
-import {ToastMessageModel} from "../shared/components/toast-message/toast-message.model";
+import {NotificationModel} from "../shared/models/notification.model";
 
-export const ShowToastMessage = createAction('Notification : Show', props<{notification: ToastMessageModel}>());
+export const Notification = createAction('Notification', props<{notification: NotificationModel}>());
