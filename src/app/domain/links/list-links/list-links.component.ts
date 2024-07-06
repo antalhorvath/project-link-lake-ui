@@ -30,4 +30,12 @@ export class ListLinksComponent implements OnInit {
   navigateToAddNew() {
     this.router.navigate(['/links/add']).then(asd => console.log(asd))
   }
+
+  editLink(link: Link) {
+    this.store.dispatch(LinkPageActions.editLink({link}));
+  }
+
+  deleteLink(link: Link) {
+    this.store.dispatch(LinkPageActions.deleteLink({linkId: link.linkId}));
+  }
 }

@@ -21,6 +21,10 @@ export const routes: Routes = [
       {
         path: 'add',
         component: EditLinkComponent,
+      },
+      {
+        path: ':id/edit',
+        component: EditLinkComponent,
       }
     ]
   }

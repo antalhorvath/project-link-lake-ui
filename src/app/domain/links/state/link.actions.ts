@@ -8,8 +8,9 @@ export const LinkPageActions = createActionGroup({
   events: {
     'Load Links': emptyProps(),
     'Add Link': props<{ link: Link }>(),
+    'Edit Link': props<{ link: Link }>(),
     'Update Link': props<{ link: Update<Link> }>(),
-    'Delete Link': props<{ id: string }>()
+    'Delete Link': props<{ linkId: string }>()
   }
 });
 
@@ -22,7 +23,7 @@ export const LinkApiEvents = createActionGroup({
     'Add Link Failure': props<{ error: string }>(),
     'Update Link Success': props<{ link: Update<Link> }>(),
     'Update Link Failure': props<{ error: string }>(),
-    'Delete Link Success': props<{ in: string }>(),
+    'Delete Link Success': props<{ linkId: string }>(),
     'Delete Link Failure': props<{ error: string }>(),
   }
 })

@@ -38,6 +38,13 @@ const onApiSuccessEvents: ReducerTypes<LinkState, readonly ActionCreator[]>[] = 
       isLoading: false,
       error: ''
     })
+  ),
+  on(LinkApiEvents.deleteLinkSuccess,
+    (state, action) => adapter.removeOne(action.linkId, {
+      ...state,
+      isLoading: false,
+      error: ''
+    })
   )
 ];
 
