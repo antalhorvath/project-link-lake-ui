@@ -20,15 +20,15 @@ export class ListLinksComponent implements OnInit {
 
   links$: Observable<Link[]> = this.store.select(linksFeature.selectAll);
 
-  constructor(private store: Store<LinkState>, private router: Router) {
+  constructor(private store: Store<LinkState>) {
   }
 
   ngOnInit(): void {
     this.store.dispatch(LinkPageActions.loadLinks());
   }
 
-  navigateToAddNew() {
-    this.router.navigate(['/links/add']).then(asd => console.log(asd))
+  addLink() {
+    this.store.dispatch(LinkPageActions.addLink());
   }
 
   editLink(link: Link) {

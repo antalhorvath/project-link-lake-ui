@@ -38,14 +38,14 @@ describe('Link Reducer', () => {
       expect(updatedState.entities).toEqual({'1': links[0], '2': links[1]});
     });
 
-    it('adds one link', () => {
+    it('saves one link', () => {
       let link = {
         linkId: '1',
         name: 'test link 1',
         link: 'https://test.it'
       };
 
-      const action = LinkApiEvents.addLinkSuccess({link});
+      const action = LinkApiEvents.saveLinkSuccess({link});
 
       const updatedState = reducer(initialState, action);
 
@@ -66,10 +66,10 @@ describe('Link Reducer', () => {
       let link = {
         linkId: '1',
         name: 'updated test link 1',
-        link: 'https://new.test.it'
+        link: 'https://uptesded.it'
       };
 
-      const action = LinkApiEvents.updateLinkSuccess({link: {id: link.linkId, changes: {...link}}});
+      const action = LinkApiEvents.saveLinkSuccess({link});
 
       const updatedState = reducer(initialState, action);
 
@@ -113,8 +113,7 @@ describe('Link Reducer', () => {
       const error = 'some api error';
       [
         LinkApiEvents.loadLinksFailure({error}),
-        LinkApiEvents.addLinkFailure({error}),
-        LinkApiEvents.updateLinkFailure({error}),
+        LinkApiEvents.saveLinkFailure({error}),
         LinkApiEvents.deleteLinkFailure({error}),
       ].forEach(action => {
         initialState.error = '';
@@ -132,8 +131,7 @@ describe('Link Reducer', () => {
       const link = {linkId: '', name: '', link: ''};
       [
         LinkPageActions.loadLinks(),
-        LinkPageActions.addLink({link: link}),
-        LinkPageActions.updateLink({link: {id: link.linkId, changes: {...link}}}),
+        LinkPageActions.saveLink({link}),
         LinkPageActions.deleteLink({linkId: link.linkId}),
       ].forEach(action => {
         initialState.error = 'some error message';
