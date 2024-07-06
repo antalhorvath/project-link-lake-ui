@@ -77,6 +77,34 @@ describe('Link Reducer', () => {
       expect(updatedState.entities).toEqual({'1': link});
     });
 
+    it('removes one link', () => {
+      initialState.ids = ['1', '2'];
+      initialState.entities = {
+        '1': {
+          linkId: '1',
+          name: 'test link 1',
+          link: 'https://test.it'
+        },
+        '2': {
+          linkId: '2',
+          name: 'test link 2',
+          link: 'https://test.it'
+        }
+      };
+
+      const action = LinkApiEvents.deleteLinkSuccess({ linkId: '2'});
+
+      const updatedState = reducer(initialState, action);
+
+      const link = {
+        linkId: '1',
+        name: 'test link 1',
+        link: 'https://test.it'
+      };
+      expect(updatedState.ids).toEqual(['1']);
+      expect(updatedState.entities).toEqual({'1': link});
+    });
+
   });
 
   describe('on API failures', () => {
@@ -97,7 +125,7 @@ describe('Link Reducer', () => {
       })
     });
   });
-  
+
   describe('on Page actions', () => {
 
     it('clears error state', () => {
@@ -106,7 +134,7 @@ describe('Link Reducer', () => {
         LinkPageActions.loadLinks(),
         LinkPageActions.addLink({link: link}),
         LinkPageActions.updateLink({link: {id: link.linkId, changes: {...link}}}),
-        LinkPageActions.deleteLink({id: link.linkId}),
+        LinkPageActions.deleteLink({linkId: link.linkId}),
       ].forEach(action => {
         initialState.error = 'some error message';
 

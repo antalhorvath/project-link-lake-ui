@@ -68,7 +68,52 @@ export class LinkEffects {
         }))
       )
     );
+  });
+
+  deleteLink$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkPageActions.deleteLink),
+      switchMap(action => this.linkService.deleteLink(action.linkId).pipe(
+        map(linkId => LinkApiEvents.deleteLinkSuccess({linkId: linkId})),
+        catchError(error => of(LinkApiEvents.deleteLinkFailure({error: this.unpackError(error)})))
+      ))
+    )
   })
+
+  deleteLinkSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkApiEvents.deleteLinkSuccess),
+      switchMap(() => of(Notification({
+          notification: {
+            type: 'info',
+            message: 'Link has been deleted.'
+          }
+        })
+      ))
+    );
+  });
+
+  deleteLinkFailure$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkApiEvents.deleteLinkFailure),
+      switchMap(() => of(Notification({
+          notification: {
+            type: 'error',
+            message: 'Failed to delete link.'
+          }
+        }))
+      )
+    );
+  })
+
+  editLink$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkPageActions.editLink),
+      switchMap((action) => this.router.navigate([`/links/${action.link.linkId}/edit`]))
+    );
+  }, {
+    dispatch: false
+  });
 
   constructor(private actions$: Actions,
               private linkService: LinkService,

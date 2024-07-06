@@ -19,4 +19,9 @@ export class LinkService {
     return this.http.put(`/api/links/${link.linkId}`, {name: link.name, link: link.link})
       .pipe(map(() => link));
   }
+
+  deleteLink(linkId: string): Observable<string> {
+    return this.http.delete(`/api/links/${linkId}`)
+      .pipe(map(() => linkId));
+  }
 }
