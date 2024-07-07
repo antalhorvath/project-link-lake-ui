@@ -22,21 +22,30 @@ export class LinkEffects {
     );
   });
 
-  addLink$ = createEffect(() => {
+  addLinks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(LinkPageActions.addLink),
+      switchMap(() => this.router.navigate(['/links/add']))
+    );
+  }, {
+    dispatch: false
+  });
+
+  saveLink$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkPageActions.saveLink),
       switchMap((action) =>
         this.linkService.addLink(action.link).pipe(
-          map(link => LinkApiEvents.addLinkSuccess({link})),
-          catchError(error => of(LinkApiEvents.addLinkFailure({error: this.unpackError(error)})))
+          map(link => LinkApiEvents.saveLinkSuccess({link})),
+          catchError(error => of(LinkApiEvents.saveLinkFailure({error: this.unpackError(error)})))
         )
       )
     )
   });
 
-  addLinkSuccessToRedirect$ = createEffect(() => {
+  saveLinkSuccessToRedirect$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(LinkApiEvents.addLinkSuccess),
+      ofType(LinkApiEvents.saveLinkSuccess),
       switchMap(() => this.router.navigate(['/links']))
     );
   }, {
@@ -45,11 +54,11 @@ export class LinkEffects {
 
   addLinkSuccess$ = createEffect(() => {
       return this.actions$.pipe(
-        ofType(LinkApiEvents.addLinkSuccess),
+        ofType(LinkApiEvents.saveLinkSuccess),
         switchMap(() => of(Notification({
             notification: {
               type: 'info',
-              message: 'Link has been added.'
+              message: 'Link has been saved.'
             }
           })
         ))
@@ -59,11 +68,11 @@ export class LinkEffects {
 
   addLinkFailure$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(LinkApiEvents.addLinkFailure),
+      ofType(LinkApiEvents.saveLinkFailure),
       switchMap(() => of(Notification({
           notification: {
             type: 'error',
-            message: 'Failed to add link.'
+            message: 'Failed to save link.'
           }
         }))
       )

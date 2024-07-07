@@ -79,12 +79,12 @@ describe('EditLinkComponent', () => {
       const submitButton = fixture.nativeElement.querySelector('form button[type="submit"]');
       submitButton.click();
 
-      const linkToAdd: Link = {
+      const linkToSave: Link = {
         linkId: component.linkForm.value.linkId ?? '',
         name: 'test link',
         link: 'https://example.com'
       };
-      const action = LinkPageActions.addLink(LinkPageActions.addLink({link: linkToAdd}));
+      const action = LinkPageActions.saveLink({link: linkToSave});
       expect(store.dispatch).toHaveBeenCalledWith(action);
     });
   });
