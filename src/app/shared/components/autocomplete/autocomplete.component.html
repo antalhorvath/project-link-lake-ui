@@ -1,0 +1,43 @@
+<div class="mb-5" #autocompleteElement>
+
+  <label [for]="field"
+         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tags</label>
+
+  <div  *ngIf="selectedOptions.length"
+        class="p-4 pb-2 border-2 border-gray-200 border-dashed border-b-0 rounded-t-lg dark:border-gray-700 flex flex-wrap"
+  >
+    @for (item of selectedOptions; track item.text) {
+      <badge [text]="item.text" class="mb-2" (removed)="onTagRemoval(item)"></badge>
+    }
+  </div>
+
+  <input [id]="field"
+         type="text"
+         autocomplete="off"
+         placeholder="enter a tag"
+         [disabled]="isDisabled"
+         [ngClass]="selectedOptions.length ? 'rounded-b-lg' : 'rounded-lg'"
+         [value]="textValue"
+         (blur)="onTouched()"
+         (input)="onInputChange($event)" (keydown)="onKeydown($event)"
+         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500
+                focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+         />
+</div>
+
+<div #optionsElement
+     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+  <ul *ngIf="options"
+      class="py-2 text-sm text-gray-700 dark:text-gray-200">
+    @for (option of options; track option.id) {
+      <li class="flex">
+        <button class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                (click)="onOptionClick($index)"
+                [ngClass]="$index === indexOfSelectedOption ? 'bg-gray-100 dark:bg-gray-600 dark:text-white' : ''">
+          {{ option.text }}
+        </button>
+      </li>
+    }
+  </ul>
+</div>
