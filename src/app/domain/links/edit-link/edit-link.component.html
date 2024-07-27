@@ -1,4 +1,7 @@
-<form class="max-w-sm mx-auto" [formGroup]="linkForm" (ngSubmit)="onSubmit()">
+<form class="max-w-sm mx-auto"
+      [formGroup]="linkForm"
+      (ngSubmit)="onSubmit()"
+      (keydown.enter)="$event.preventDefault()">
 
   <div class="mb-5">
     <form-field [hasError]="hasError('link')">
@@ -14,6 +17,14 @@
       <input id="name" type="text" formControlName="name">
       <p>{{ getErrorMessage('name') }}</p>
     </form-field>
+  </div>
+
+  <div class="mb-5">
+    <autocomplete formControlName="tags"
+                  field="tags"
+                  [options]="options"
+                  (completeRequest)="onCompleteRequest($event)"
+    ></autocomplete>
   </div>
 
   <button type="submit"

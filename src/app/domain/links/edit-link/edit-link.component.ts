@@ -1,24 +1,64 @@
 import {Component, OnInit} from '@angular/core';
 import {FormFieldComponent} from "../../../shared/components/form-field/form-field.component";
-import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CustomValidators} from "../../../shared/util/custom.validators";
 import {NgClass} from "@angular/common";
 import {simpleUuid} from "../../../shared/util/uuid.helper";
 import {Store} from "@ngrx/store";
 import {LinkState, selectSelectedLink} from "../state/link.reducer";
-import {LinkPageActions} from "../state/link.actions";
 import {Link} from "../state/link.model";
 import {first} from "rxjs";
 import {filter} from "rxjs/operators";
+import {
+  AutocompleteComponent,
+  AutocompleteOption
+} from "../../../shared/components/autocomplete/autocomplete.component";
+import {LinkPageActions} from "../state/link.actions";
 
 @Component({
   selector: 'app-edit-link',
   standalone: true,
-  imports: [FormFieldComponent, ReactiveFormsModule, NgClass],
+  imports: [FormFieldComponent, ReactiveFormsModule, NgClass, AutocompleteComponent, FormsModule],
   templateUrl: './edit-link.component.html',
   styleUrl: './edit-link.component.scss'
 })
 export class EditLinkComponent implements OnInit {
+
+  options: AutocompleteOption[] = [];
+  mockOptions: AutocompleteOption[] = [
+    {
+      id: '1',
+      text: 'java'
+    },
+    {
+      id: '2',
+      text: 'spring'
+    },
+    {
+      id: '3',
+      text: 'architecture'
+    },
+    {
+      id: '4',
+      text: 'javascript'
+    },
+    {
+      id: '5',
+      text: 'ddd'
+    },
+    {
+      id: '6',
+      text: 'sql'
+    },
+    {
+      id: '7',
+      text: 'unit testing'
+    },
+    {
+      id: '8',
+      text: 'angular'
+    }
+  ];
 
   genericErrorMessages: { [index: string]: string } = {
     required: 'Required'
@@ -37,7 +77,8 @@ export class EditLinkComponent implements OnInit {
       updateOn: 'blur'
     }
     ],
-    name: ['', Validators.required]
+    name: ['', Validators.required],
+    tags: [[]]
   });
 
   constructor(private formBuilder: FormBuilder,
@@ -89,5 +130,10 @@ export class EditLinkComponent implements OnInit {
       };
       this.store.dispatch(LinkPageActions.saveLink({link}));
     }
+  }
+
+  onCompleteRequest(textToComplete: string) {
+    this.options = this.mockOptions
+      .filter(op => op.text.toLowerCase().includes(textToComplete.toLowerCase()));
   }
 }
