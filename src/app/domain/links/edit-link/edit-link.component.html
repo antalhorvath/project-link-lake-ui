@@ -6,7 +6,11 @@
   <div class="mb-5">
     <form-field [hasError]="hasError('link')">
       <label for="link">Link</label>
-      <input id="link" type="text" formControlName="link" autofocus>
+      <input type="text"
+             id="link"
+             formControlName="link"
+             autofocus
+             autocomplete="off">
       <p>{{ getErrorMessage('link') }}</p>
     </form-field>
   </div>
@@ -14,7 +18,10 @@
   <div class="mb-5">
     <form-field [hasError]="hasError('name')">
       <label for="name">Name</label>
-      <input id="name" type="text" formControlName="name">
+      <input type="text"
+             id="name"
+             formControlName="name"
+             autocomplete="off">
       <p>{{ getErrorMessage('name') }}</p>
     </form-field>
   </div>
