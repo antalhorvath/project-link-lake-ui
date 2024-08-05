@@ -127,7 +127,8 @@ export class AutocompleteComponent implements AfterViewInit , ControlValueAccess
     }
   }
 
-  onOptionClick(selected: number) {
+  onOptionClick(event: Event, selected: number) {
+    event.preventDefault();
     this.indexOfSelectedOption = selected;
     this.addSelectedOptionFromDropdown()
   }
