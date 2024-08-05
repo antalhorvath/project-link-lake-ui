@@ -115,7 +115,7 @@ describe('LinkEffects', () => {
 
         actions$ = of(LinkApiEvents.saveLinkSuccess({link}));
 
-        effects.addLinkSuccess$.subscribe(action => {
+        effects.saveLinkSuccess$.subscribe(action => {
           const notification: NotificationModel = {
             type: 'info',
             message: 'Link has been saved.',
@@ -145,7 +145,7 @@ describe('LinkEffects', () => {
       it('dispatches failure notification', (done) => {
         actions$ = of(LinkApiEvents.saveLinkFailure({error: 'some error'}));
 
-        effects.addLinkFailure$.subscribe(action => {
+        effects.saveLinkFailure$.subscribe(action => {
           const notification: NotificationModel = {
             type: 'error',
             message: 'Failed to add link.',

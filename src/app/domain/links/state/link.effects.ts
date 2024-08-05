@@ -52,7 +52,7 @@ export class LinkEffects {
     dispatch: false
   });
 
-  addLinkSuccess$ = createEffect(() => {
+  saveLinkSuccess$ = createEffect(() => {
       return this.actions$.pipe(
         ofType(LinkApiEvents.saveLinkSuccess),
         switchMap(() => of(Notification({
@@ -66,7 +66,7 @@ export class LinkEffects {
     }
   );
 
-  addLinkFailure$ = createEffect(() => {
+  saveLinkFailure$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(LinkApiEvents.saveLinkFailure),
       switchMap(() => of(Notification({
