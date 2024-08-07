@@ -27,35 +27,35 @@ export class EditLinkComponent implements OnInit {
   options: AutocompleteOption[] = [];
   mockOptions: AutocompleteOption[] = [
     {
-      id: '1',
+      id: '91f8fc12e477499e9694191c241947f9',
       text: 'java'
     },
     {
-      id: '2',
+      id: '7481f674e080451ea6ecdeff47b3e8a0',
       text: 'spring'
     },
     {
-      id: '3',
+      id: 'b9489a2ac5524045ad9c9e8d8679f922',
       text: 'architecture'
     },
     {
-      id: '4',
+      id: '77ca7eeb65f34f1a93234b46a2cb6045',
       text: 'javascript'
     },
     {
-      id: '5',
+      id: 'f79981825dba4a52898e6c7ef3b2e13b',
       text: 'ddd'
     },
     {
-      id: '6',
+      id: '8020533d80094ef2b94df5207be6963c',
       text: 'sql'
     },
     {
-      id: '7',
+      id: '4b0f77af6871468794bc27e070f69a8f',
       text: 'unit testing'
     },
     {
-      id: '8',
+      id: '3281d27741254486872da7b8cb53b907',
       text: 'angular'
     }
   ];
@@ -70,6 +70,8 @@ export class EditLinkComponent implements OnInit {
     }
   }
 
+  tags: AutocompleteOption[] = [];
+
   linkForm = this.formBuilder.group({
     linkId: [simpleUuid()],
     link: ['', {
@@ -78,7 +80,7 @@ export class EditLinkComponent implements OnInit {
     }
     ],
     name: ['', Validators.required],
-    tags: [[]]
+    tags: [this.tags]
   });
 
   constructor(private formBuilder: FormBuilder,
@@ -126,7 +128,8 @@ export class EditLinkComponent implements OnInit {
       const link: Link = {
         linkId: form.linkId ?? '',
         name: form.name ?? '',
-        link: form.link ?? ''
+        link: form.link ?? '',
+        tags: (form.tags ?? []).map(option => ({tagId: option.id, name: option.text}))
       };
       this.store.dispatch(LinkPageActions.saveLink({link}));
     }

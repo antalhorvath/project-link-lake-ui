@@ -82,7 +82,8 @@ describe('EditLinkComponent', () => {
       const linkToSave: Link = {
         linkId: component.linkForm.value.linkId ?? '',
         name: 'test link',
-        link: 'https://example.com'
+        link: 'https://example.com',
+        tags: []
       };
       const action = LinkPageActions.saveLink({link: linkToSave});
       expect(store.dispatch).toHaveBeenCalledWith(action);

@@ -23,11 +23,13 @@ describe('Link Reducer', () => {
       let links = [{
         linkId: '1',
         name: 'test link 1',
-        link: 'https://test.it'
+        link: 'https://test.it',
+        tags: []
       }, {
         linkId: '2',
         name: 'test link 2',
-        link: 'https://test.it'
+        link: 'https://test.it',
+        tags: []
       }];
 
       const action = LinkApiEvents.loadLinksSuccess({links});
@@ -42,7 +44,8 @@ describe('Link Reducer', () => {
       let link = {
         linkId: '1',
         name: 'test link 1',
-        link: 'https://test.it'
+        link: 'https://test.it',
+        tags: []
       };
 
       const action = LinkApiEvents.saveLinkSuccess({link});
@@ -59,14 +62,16 @@ describe('Link Reducer', () => {
         '1': {
           linkId: '1',
           name: 'test link 1',
-          link: 'https://test.it'
+          link: 'https://test.it',
+          tags: []
         }
       };
 
       let link = {
         linkId: '1',
         name: 'updated test link 1',
-        link: 'https://uptesded.it'
+        link: 'https://uptesded.it',
+        tags: []
       };
 
       const action = LinkApiEvents.saveLinkSuccess({link});
@@ -83,12 +88,14 @@ describe('Link Reducer', () => {
         '1': {
           linkId: '1',
           name: 'test link 1',
-          link: 'https://test.it'
+          link: 'https://test.it',
+          tags: []
         },
         '2': {
           linkId: '2',
           name: 'test link 2',
-          link: 'https://test.it'
+          link: 'https://test.it',
+          tags: []
         }
       };
 
@@ -99,7 +106,8 @@ describe('Link Reducer', () => {
       const link = {
         linkId: '1',
         name: 'test link 1',
-        link: 'https://test.it'
+        link: 'https://test.it',
+        tags: []
       };
       expect(updatedState.ids).toEqual(['1']);
       expect(updatedState.entities).toEqual({'1': link});
@@ -128,7 +136,7 @@ describe('Link Reducer', () => {
   describe('on Page actions', () => {
 
     it('clears error state', () => {
-      const link = {linkId: '', name: '', link: ''};
+      const link = {linkId: '', name: '', link: '', tags: []};
       [
         LinkPageActions.loadLinks(),
         LinkPageActions.saveLink({link}),

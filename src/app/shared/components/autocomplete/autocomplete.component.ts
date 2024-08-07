@@ -17,6 +17,7 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR
 } from "@angular/forms";
+import {simpleUuid} from "../../util/uuid.helper";
 
 export interface AutocompleteOption {
   id: string;
@@ -127,7 +128,8 @@ export class AutocompleteComponent implements AfterViewInit , ControlValueAccess
     }
   }
 
-  onOptionClick(selected: number) {
+  onOptionClick(event: Event, selected: number) {
+    event.preventDefault();
     this.indexOfSelectedOption = selected;
     this.addSelectedOptionFromDropdown()
   }
@@ -160,7 +162,7 @@ export class AutocompleteComponent implements AfterViewInit , ControlValueAccess
     if (this.indexOfSelectedOption >= 0) {
       return this.options[this.indexOfSelectedOption];
     } else {
-      return {id: '', text: this.textValue};
+      return {id: simpleUuid(), text: this.textValue};
     }
   }
 
