@@ -80,7 +80,7 @@ export class LinkEffects {
           name: link.name,
           tags: link.tags
         }).pipe(
-          map(({tags}) => LinkApiEvents.tagLinkSuccess({tags})),
+          map(resource => LinkApiEvents.tagLinkSuccess({resource})),
           catchError(error => of(LinkApiEvents.tagLinkFailure({error: this.unpackError(error)})))
         )
       )

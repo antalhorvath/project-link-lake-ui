@@ -17,12 +17,14 @@ describe('List Links', () => {
       {
         linkId: '1',
         name: 'test link 1',
-        link: 'https://example1.com'
+        link: 'https://example1.com',
+        tags: []
       },
       {
         linkId: '2',
         name: 'test link 2',
-        link: 'https://example2.com'
+        link: 'https://example2.com',
+        tags: []
       }
     ];
 
