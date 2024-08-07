@@ -1,6 +1,6 @@
-import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import {createActionGroup, emptyProps, props} from '@ngrx/store';
 
-import { Link } from './link.model';
+import {Link} from './link.model';
 import {TaggedResource} from "../../../shared/services/resource.service";
 
 export const LinkPageActions = createActionGroup({
@@ -25,6 +25,14 @@ export const LinkApiEvents = createActionGroup({
     'Delete Link Failure': props<{ error: string }>(),
     'Tag Link Success': props<{ resource: TaggedResource }>(),
     'Tag Link Failure': props<{ error: string }>()
+  }
+})
+
+export const ResourceApiEvents = createActionGroup({
+  source: 'Resource/API',
+  events: {
+    'Load Resources Success': props<{ resources: TaggedResource[] }>(),
+    'Load Resources Failure': props<{ error: string }>(),
   }
 })
 

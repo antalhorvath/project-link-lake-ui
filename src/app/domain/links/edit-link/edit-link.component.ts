@@ -99,6 +99,7 @@ export class EditLinkComponent implements OnInit {
           this.linkForm.get('linkId')?.setValue(link?.linkId);
           this.linkForm.get('link')?.setValue(link?.link);
           this.linkForm.get('name')?.setValue(link?.name);
+          this.linkForm.get('tags')?.setValue(link?.tags.map(tag => ({id: tag.tagId, text: tag.name})))
         }
       });
   }
@@ -138,5 +139,9 @@ export class EditLinkComponent implements OnInit {
   onCompleteRequest(textToComplete: string) {
     this.options = this.mockOptions
       .filter(op => op.text.toLowerCase().includes(textToComplete.toLowerCase()));
+  }
+
+  get selectedOptions(): AutocompleteOption[] {
+    return this.linkForm.get('tags')?.value || [];
   }
 }
