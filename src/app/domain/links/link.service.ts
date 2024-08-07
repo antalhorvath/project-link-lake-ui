@@ -15,7 +15,7 @@ export class LinkService {
     return this.http.get<Link[]>('/api/links');
   }
 
-  addLink(link: Link): Observable<Link> {
+  saveLink(link: Link): Observable<Link> {
     return this.http.put(`/api/links/${link.linkId}`, {name: link.name, link: link.link})
       .pipe(map(() => link));
   }

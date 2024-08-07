@@ -57,7 +57,8 @@ describe('LinkEffects', () => {
       let links = [{
         linkId: 'id',
         name: 'test link',
-        link: 'https://test.it'
+        link: 'https://test.it',
+        tags: []
       }];
       service.loadLinks.and.returnValue(of(links));
 
@@ -82,36 +83,36 @@ describe('LinkEffects', () => {
 
   describe('on save link page action', () => {
 
-    const link = {linkId: 'id', name: 'test link', link: 'https://test.com'};
+    const link = {linkId: 'id', name: 'test link', link: 'https://test.com', tags: []};
 
     describe('on API call success', () => {
 
       it('dispatches success event', (done) => {
 
-        service.addLink.and.returnValue(of(link));
+        service.saveLink.and.returnValue(of(link));
 
         actions$ = of(LinkPageActions.saveLink({link}));
 
         effects.saveLink$.subscribe(action => {
-          expect(service.addLink).toHaveBeenCalledWith(link);
+          expect(service.saveLink).toHaveBeenCalledWith(link);
           expect(action).toEqual(LinkApiEvents.saveLinkSuccess({link}));
           done();
         });
       });
 
       it('redirects to list of links', (done) => {
-        const link = {linkId: 'id', name: 'test link', link: 'https://test.com'};
+        const link = {linkId: 'id', name: 'test link', link: 'https://test.com', tags: []};
 
         actions$ = of(LinkApiEvents.saveLinkSuccess({link}));
 
-        effects.saveLinkSuccessToRedirect$.subscribe(() => {
+        effects.tagLinkCompleteToRedirect$.subscribe(() => {
           expect(location.path()).toBe('/links');
           done();
         });
       });
 
       it('dispatches success notification', (done) => {
-        const link = {linkId: 'id', name: 'test link', link: 'https://test.com'};
+        const link = {linkId: 'id', name: 'test link', link: 'https://test.com', tags: []};
 
         actions$ = of(LinkApiEvents.saveLinkSuccess({link}));
 
@@ -131,12 +132,12 @@ describe('LinkEffects', () => {
 
       it('dispatches failure event', (done) => {
         const apiErrorMessage = 'some api error';
-        service.addLink.and.returnValue(throwError(() => new Error(apiErrorMessage)));
+        service.saveLink.and.returnValue(throwError(() => new Error(apiErrorMessage)));
 
         actions$ = of(LinkPageActions.saveLink({link}));
 
         effects.saveLink$.subscribe(action => {
-          expect(service.addLink).toHaveBeenCalledWith(link);
+          expect(service.saveLink).toHaveBeenCalledWith(link);
           expect(action).toEqual(LinkApiEvents.saveLinkFailure({error: apiErrorMessage}));
           done();
         });
@@ -148,7 +149,7 @@ describe('LinkEffects', () => {
         effects.saveLinkFailure$.subscribe(action => {
           const notification: NotificationModel = {
             type: 'error',
-            message: 'Failed to add link.',
+            message: 'Failed to save link.',
           };
           expect(action).toEqual(Notification({notification}));
           done();
@@ -227,7 +228,7 @@ describe('LinkEffects', () => {
 
   describe('on edit link page action', () => {
     it('redirects to edit link', (done) => {
-      const link = {linkId: 'id', name: 'test link', link: 'https://test.com'};
+      const link = {linkId: 'id', name: 'test link', link: 'https://test.com', tags: []};
 
       actions$ = of(LinkPageActions.editLink({link}));
 
@@ -263,6 +264,4 @@ describe('LinkEffects', () => {
       expect(result).toBe('error occurred');
     });
 
-  });
-
-});
+  });});
