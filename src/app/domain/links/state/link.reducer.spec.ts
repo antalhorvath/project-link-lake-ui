@@ -1,7 +1,10 @@
-import {initialState, reducer} from './link.reducer';
-import {LinkApiEvents, LinkPageActions} from "./link.actions";
+import {initialState, reducer, selectAll, selectExistingTags, selectSelectedLink} from './link.reducer';
+import {LinkApiEvents, LinkPageActions, ResourceApiEvents} from "./link.actions";
+import {TaggedResource} from "../../../shared/services/resource.service";
+import {Link} from "./link.model";
 
 describe('Link Reducer', () => {
+
   describe('on Unknown action', () => {
     it('does not affect state', () => {
       const action = {} as any;
@@ -113,6 +116,68 @@ describe('Link Reducer', () => {
       expect(updatedState.entities).toEqual({'1': link});
     });
 
+    it('load resources success', () => {
+      initialState.ids = ['1', '2'];
+      initialState.entities = {
+        '1': {
+          linkId: '1',
+          name: 'test link 1',
+          link: 'https://test.it',
+          tags: []
+        },
+        '2': {
+          linkId: '2',
+          name: 'test link 2',
+          link: 'https://test.it',
+          tags: []
+        }
+      };
+
+
+      let resources: TaggedResource[] = [{
+        resourceId: '1',
+        name: 'test link 1',
+        tags: [{
+          tagId: 'tag1',
+          name: 'name of tag 2'
+        }]
+      }, {
+        resourceId: '2',
+        name: 'test link 2',
+        tags: [{
+          tagId: 'tag2',
+          name: 'name of tag 2'
+        }]
+      }];
+
+      const action = ResourceApiEvents.loadResourcesSuccess({resources});
+
+      let updatedState = reducer(initialState, action);
+
+      expect(updatedState.entities).toEqual(
+        {
+          '1': {
+            linkId: '1',
+            name: 'test link 1',
+            link: 'https://test.it',
+            tags: [{
+              tagId: 'tag1',
+              name: 'name of tag 2'
+            }]
+          },
+          '2': {
+            linkId: '2',
+            name: 'test link 2',
+            link: 'https://test.it',
+            tags: [{
+              tagId: 'tag2',
+              name: 'name of tag 2'
+            }]
+          }
+        }
+      )
+    });
+
   });
 
   describe('on API failures', () => {
@@ -149,5 +214,96 @@ describe('Link Reducer', () => {
         expect(updatedState.error).toBe('');
       })
     });
+  });
+
+  describe('selected link id', () => {
+
+    it('gets cleared on addLink page action', () => {
+      initialState.selectedLinkId = 'someId';
+
+      const updatedState = reducer(initialState, LinkPageActions.addLink());
+
+      expect(updatedState.selectedLinkId).toBe('');
+    });
+
+    it('gets initialised on edit link page action', () => {
+      const link: Link = {linkId: 'linkToEditId', name: '', link: '', tags: []};
+      initialState.selectedLinkId = '';
+
+      const updatedState = reducer(initialState, LinkPageActions.editLink({link}));
+
+      expect(updatedState.selectedLinkId).toBe('linkToEditId');
+    });
+  });
+});
+
+describe('Link Selector', () => {
+
+  it('selects selected link', () => {
+    initialState.ids = ['1'];
+    const linkInStore = {
+      linkId: '1',
+      name: 'test link 1',
+      link: 'https://test.it',
+      tags: []
+    };
+    initialState.entities = {
+      '1': linkInStore
+    };
+
+    initialState.selectedLinkId = '1';
+
+    const selectedLink = selectSelectedLink.projector(initialState);
+    expect(selectedLink).toEqual(linkInStore);
+  });
+
+  it('selects unique set of existing tags', () => {
+    const links = [
+      {
+        linkId: '1',
+        name: 'test link 1',
+        link: 'https://test.it',
+        tags: [
+          {
+            tagId: 'tag1',
+            name: 'name of tag 1'
+          },
+          {
+            tagId: 'tag2',
+            name: 'name of tag 2'
+          }
+        ]
+      },
+      {
+        linkId: '2',
+        name: 'test link 2',
+        link: 'https://test.it',
+        tags: [
+          {
+            tagId: 'tag2',
+            name: 'name of tag 2'
+          },
+          {
+            tagId: 'tag3',
+            name: 'name of tag 3'
+          }
+        ]
+      }
+    ];
+    const existingTags = selectExistingTags.projector(links);
+    expect(existingTags).toEqual([
+      {
+        tagId: 'tag1',
+        name: 'name of tag 1'
+      },
+      {
+        tagId: 'tag2',
+        name: 'name of tag 2'
+      },
+      {
+        tagId: 'tag3',
+        name: 'name of tag 3'
+      }
+    ]);
   });
 });
