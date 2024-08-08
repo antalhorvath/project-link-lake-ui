@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {FormFieldComponent} from "../../../shared/components/form-field/form-field.component";
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CustomValidators} from "../../../shared/util/custom.validators";
-import {NgClass} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 import {simpleUuid} from "../../../shared/util/uuid.helper";
 import {Store} from "@ngrx/store";
-import {LinkState, selectSelectedLink} from "../state/link.reducer";
+import {LinkState, selectExistingTags, selectSelectedLink} from "../state/link.reducer";
 import {Link} from "../state/link.model";
-import {first} from "rxjs";
+import {first, map, Observable, of} from "rxjs";
 import {filter} from "rxjs/operators";
 import {
   AutocompleteComponent,
@@ -18,47 +18,14 @@ import {LinkPageActions} from "../state/link.actions";
 @Component({
   selector: 'app-edit-link',
   standalone: true,
-  imports: [FormFieldComponent, ReactiveFormsModule, NgClass, AutocompleteComponent, FormsModule],
+  imports: [FormFieldComponent, ReactiveFormsModule, NgClass, AutocompleteComponent, FormsModule, AsyncPipe],
   templateUrl: './edit-link.component.html',
   styleUrl: './edit-link.component.scss'
 })
 export class EditLinkComponent implements OnInit {
 
-  options: AutocompleteOption[] = [];
-  mockOptions: AutocompleteOption[] = [
-    {
-      id: '91f8fc12e477499e9694191c241947f9',
-      text: 'java'
-    },
-    {
-      id: '7481f674e080451ea6ecdeff47b3e8a0',
-      text: 'spring'
-    },
-    {
-      id: 'b9489a2ac5524045ad9c9e8d8679f922',
-      text: 'architecture'
-    },
-    {
-      id: '77ca7eeb65f34f1a93234b46a2cb6045',
-      text: 'javascript'
-    },
-    {
-      id: 'f79981825dba4a52898e6c7ef3b2e13b',
-      text: 'ddd'
-    },
-    {
-      id: '8020533d80094ef2b94df5207be6963c',
-      text: 'sql'
-    },
-    {
-      id: '4b0f77af6871468794bc27e070f69a8f',
-      text: 'unit testing'
-    },
-    {
-      id: '3281d27741254486872da7b8cb53b907',
-      text: 'angular'
-    }
-  ];
+  options: Observable<AutocompleteOption[]> = of([]);
+  allOptions: Observable<AutocompleteOption[]> = of([]);
 
   genericErrorMessages: { [index: string]: string } = {
     required: 'Required'
@@ -92,6 +59,14 @@ export class EditLinkComponent implements OnInit {
   }
 
   private initializeFormValues() {
+    this.allOptions = this.store.select(selectExistingTags)
+      .pipe(
+        map(tags => [...tags.map(tag => ({
+          id: tag.tagId,
+          text: tag.name
+        }))]
+        )
+      );
     this.store.select(selectSelectedLink)
       .pipe(first(), filter(link => !!link))
       .subscribe((link) => {
@@ -99,6 +74,7 @@ export class EditLinkComponent implements OnInit {
           this.linkForm.get('linkId')?.setValue(link?.linkId);
           this.linkForm.get('link')?.setValue(link?.link);
           this.linkForm.get('name')?.setValue(link?.name);
+          this.linkForm.get('tags')?.setValue(link?.tags.map(tag => ({id: tag.tagId, text: tag.name})))
         }
       });
   }
@@ -135,8 +111,13 @@ export class EditLinkComponent implements OnInit {
     }
   }
 
-  onCompleteRequest(textToComplete: string) {
-    this.options = this.mockOptions
-      .filter(op => op.text.toLowerCase().includes(textToComplete.toLowerCase()));
+  onCompleteRequest(textToComplete: string): void {
+    this.options = this.allOptions.pipe(
+      map(allOpt => allOpt.filter(op => op.text.toLowerCase().includes(textToComplete.toLowerCase())))
+    )
+  }
+
+  get selectedOptions(): AutocompleteOption[] {
+    return this.linkForm.get('tags')?.value || [];
   }
 }

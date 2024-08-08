@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {catchError, map} from 'rxjs/operators';
 import {of, switchMap} from 'rxjs';
-import {LinkApiEvents, LinkPageActions} from './link.actions';
+import {LinkApiEvents, LinkPageActions, ResourceApiEvents} from './link.actions';
 import {LinkService} from "../link.service";
 import {Router} from "@angular/router";
 import {Notification} from "../../../reducers/root.actions";
@@ -23,6 +23,16 @@ export class LinkEffects {
     );
   });
 
+  loadLinksSuccess$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkApiEvents.loadLinksSuccess),
+      switchMap(() =>
+        this.resourceService.queryResources().pipe(
+          map(resources => ResourceApiEvents.loadResourcesSuccess({resources})),
+          catchError(error => of(ResourceApiEvents.loadResourcesFailure({error: this.unpackError(error)})))
+        ))
+    )
+  });
 
   addLink$ = createEffect(() => {
     return this.actions$.pipe(

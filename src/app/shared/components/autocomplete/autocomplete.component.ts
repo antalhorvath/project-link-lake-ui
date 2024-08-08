@@ -77,14 +77,15 @@ export class AutocompleteComponent implements AfterViewInit , ControlValueAccess
   @Input()
   options: AutocompleteOption[] = [];
 
+  @Input()
+  selectedOptions: AutocompleteOption[] = [];
+
   @Output()
   completeRequest: EventEmitter<string> = new EventEmitter<string>();
 
   indexOfSelectedOption = -1;
 
   textValue = '';
-
-  selectedOptions: AutocompleteOption[] = [];
 
   onChange!: (value: AutocompleteOption[]) => void;
   onTouched!: () => void;

@@ -21,6 +21,10 @@ export class ResourceService {
   constructor(private http: HttpClient) {
   }
 
+  queryResources(): Observable<TaggedResource[]> {
+    return this.http.get<TaggedResource[]>('/api/resources');
+  }
+
   saveTaggedResource(taggedResource: TaggedResource): Observable<TaggedResource> {
     return this.http.put(`/api/resources/${taggedResource.resourceId}`, {
       name: taggedResource.name,
