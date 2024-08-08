@@ -124,6 +124,15 @@ export const selectSelectedLink = createSelector(linkState, (state: LinkState) =
   return state.selectedLinkId ? state.entities[state.selectedLinkId] : null;
 })
 
+const selectAllLinks = adapter.getSelectors(linkState).selectAll;
+
+export const selectExistingTags = createSelector(selectAllLinks, (links: Link[]) => {
+  const allTags = links.flatMap(link => link.tags);
+  const tags = new Map<string, ResourceTag>();
+  allTags.forEach((tag: ResourceTag) => tags.set(tag.tagId, tag));
+  return [...tags.values()];
+})
+
 export const {
   selectIds,
   selectEntities,

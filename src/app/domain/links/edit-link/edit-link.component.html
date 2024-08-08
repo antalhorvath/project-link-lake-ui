@@ -29,7 +29,7 @@
   <div class="mb-5">
     <autocomplete formControlName="tags"
                   field="tags"
-                  [options]="options"
+                  [options]="((options | async) || [])"
                   [selectedOptions]="selectedOptions"
                   (completeRequest)="onCompleteRequest($event)"
     ></autocomplete>
