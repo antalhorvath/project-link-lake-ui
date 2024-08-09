@@ -31,4 +31,9 @@ export class ResourceService {
       tags: taggedResource.tags
     }).pipe(map(() => taggedResource));
   }
+
+  deleteTaggedResource(resourceId: string) {
+    return this.http.delete(`/api/resources/${resourceId}`)
+      .pipe(map(() => resourceId))
+  }
 }

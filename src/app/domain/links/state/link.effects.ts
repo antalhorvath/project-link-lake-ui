@@ -155,6 +155,15 @@ export class LinkEffects {
     );
   })
 
+  untagLink$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(LinkApiEvents.deleteLinkSuccess),
+      switchMap(({linkId}) => this.resourceService.deleteTaggedResource(linkId))
+    )
+  }, {
+    dispatch: false
+  })
+
   editLink$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(LinkPageActions.editLink),
