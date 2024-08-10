@@ -53,14 +53,42 @@ describe('List Links', () => {
       expect(rows[1].querySelectorAll('td')[1].textContent).toBe('https://example2.com');
     });
 
-    it('dispatches delete link action', () => {
-      spyOn(store, 'dispatch');
+    it('initiates delete link', () => {
       fixture.detectChanges();
       const deleteButtonOfLink2 = fixture.nativeElement.querySelector('table tbody tr #delete-link-button-2');
 
       deleteButtonOfLink2.click();
 
+      expect(component.linkToDelete).toEqual(links[1]);
+    });
+
+    it('dispatches delete link action', () => {
+      spyOn(store, 'dispatch');
+      fixture.detectChanges();
+      const deleteButtonOfLink2 = fixture.nativeElement.querySelector('table tbody tr #delete-link-button-2');
+      deleteButtonOfLink2.click();
+      fixture.detectChanges();
+      expect(component.linkToDelete).toEqual(links[1]);
+
+      const confirmDeletionButton = fixture.nativeElement.querySelector('#delete-link-modal button#confirm');
+      confirmDeletionButton.click();
+
       expect(store.dispatch).toHaveBeenCalledWith(LinkPageActions.deleteLink({linkId: '2'}));
+    });
+
+    it('cancels delete link action', () => {
+      spyOn(store, 'dispatch');
+      fixture.detectChanges();
+      const deleteButtonOfLink2 = fixture.nativeElement.querySelector('table tbody tr #delete-link-button-2');
+      deleteButtonOfLink2.click();
+      fixture.detectChanges();
+
+      const cancelDeletionButton = fixture.nativeElement.querySelector('#delete-link-modal button#cancel');
+      cancelDeletionButton.click();
+
+      expect(component.linkToDelete).toBeNull();
+      expect(store.dispatch).toHaveBeenCalledWith(LinkPageActions.loadLinks());
+      expect(store.dispatch).toHaveBeenCalledTimes(1);
     });
 
     it('dispatches edit link action', () => {
@@ -70,7 +98,7 @@ describe('List Links', () => {
 
       deleteButtonOfLink2.click();
 
-      expect(store.dispatch).toHaveBeenCalledWith(LinkPageActions.editLink({link: links[2]}));
+      expect(store.dispatch).toHaveBeenCalledWith(LinkPageActions.editLink({link: links[1]}));
     });
   });
 
