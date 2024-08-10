@@ -4,7 +4,7 @@ import {linksFeature, LinkState} from "../state/link.reducer";
 import {Observable} from "rxjs";
 import {Link} from "../state/link.model";
 import {LinkPageActions} from "../state/link.actions";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 import {Router, RouterOutlet} from "@angular/router";
 
 @Component({
@@ -12,13 +12,15 @@ import {Router, RouterOutlet} from "@angular/router";
   standalone: true,
   imports: [
     AsyncPipe,
-    RouterOutlet
+    RouterOutlet,
+    NgClass
   ],
   templateUrl: './list-links.component.html'
 })
 export class ListLinksComponent implements OnInit {
 
   links$: Observable<Link[]> = this.store.select(linksFeature.selectAll);
+  linkToDelete: Link | null = null;
 
   constructor(private store: Store<LinkState>) {
   }
@@ -35,7 +37,18 @@ export class ListLinksComponent implements OnInit {
     this.store.dispatch(LinkPageActions.editLink({link}));
   }
 
-  deleteLink(link: Link) {
-    this.store.dispatch(LinkPageActions.deleteLink({linkId: link.linkId}));
+  initiateDeleteLink(link: Link) {
+    this.linkToDelete = link;
+  }
+
+  cancelDeleteLink() {
+    this.linkToDelete = null;
+  }
+
+  confirmDeleteLink(link: Link | null) {
+    if(link) {
+      this.store.dispatch(LinkPageActions.deleteLink({linkId: link.linkId}));
+    }
+    this.linkToDelete = null;
   }
 }
