@@ -1,6 +1,5 @@
-import {initialState, reducer, selectAll, selectExistingTags, selectSelectedLink} from './link.reducer';
-import {LinkApiEvents, LinkPageActions, ResourceApiEvents} from "./link.actions";
-import {TaggedResource} from "../../../shared/services/resource.service";
+import {initialState, reducer, selectExistingTags, selectSelectedLink} from './link.reducer';
+import {LinkApiEvents, LinkPageActions} from "./link.actions";
 import {Link} from "./link.model";
 
 describe('Link Reducer', () => {
@@ -115,69 +114,6 @@ describe('Link Reducer', () => {
       expect(updatedState.ids).toEqual(['1']);
       expect(updatedState.entities).toEqual({'1': link});
     });
-
-    it('load resources success', () => {
-      initialState.ids = ['1', '2'];
-      initialState.entities = {
-        '1': {
-          linkId: '1',
-          name: 'test link 1',
-          link: 'https://test.it',
-          tags: []
-        },
-        '2': {
-          linkId: '2',
-          name: 'test link 2',
-          link: 'https://test.it',
-          tags: []
-        }
-      };
-
-
-      let resources: TaggedResource[] = [{
-        resourceId: '1',
-        name: 'test link 1',
-        tags: [{
-          tagId: 'tag1',
-          name: 'name of tag 2'
-        }]
-      }, {
-        resourceId: '2',
-        name: 'test link 2',
-        tags: [{
-          tagId: 'tag2',
-          name: 'name of tag 2'
-        }]
-      }];
-
-      const action = ResourceApiEvents.loadResourcesSuccess({resources});
-
-      let updatedState = reducer(initialState, action);
-
-      expect(updatedState.entities).toEqual(
-        {
-          '1': {
-            linkId: '1',
-            name: 'test link 1',
-            link: 'https://test.it',
-            tags: [{
-              tagId: 'tag1',
-              name: 'name of tag 2'
-            }]
-          },
-          '2': {
-            linkId: '2',
-            name: 'test link 2',
-            link: 'https://test.it',
-            tags: [{
-              tagId: 'tag2',
-              name: 'name of tag 2'
-            }]
-          }
-        }
-      )
-    });
-
   });
 
   describe('on API failures', () => {

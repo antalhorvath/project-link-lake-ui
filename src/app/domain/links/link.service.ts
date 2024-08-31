@@ -16,7 +16,12 @@ export class LinkService {
   }
 
   saveLink(link: Link): Observable<Link> {
-    return this.http.put(`/api/links/${link.linkId}`, {name: link.name, link: link.link})
+    const payload = {
+      name: link.name,
+      link: link.link,
+      tags: link.tags
+    };
+    return this.http.put(`/api/links/${link.linkId}`, payload)
       .pipe(map(() => link));
   }
 
