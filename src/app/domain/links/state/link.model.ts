@@ -1,4 +1,4 @@
-import {ResourceTag} from "../../../shared/services/resource.service";
+import {ResourceTag} from "../../../shared/models/tag.model";
 
 export interface Link {
   linkId: string;

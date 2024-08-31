@@ -7,10 +7,11 @@ import {
   on,
   ReducerTypes
 } from '@ngrx/store';
-import {createEntityAdapter, EntityAdapter, EntityState, Update} from '@ngrx/entity';
+import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Link} from './link.model';
-import {LinkApiEvents, LinkPageActions, ResourceApiEvents} from './link.actions';
-import {ResourceTag} from "../../../shared/services/resource.service";
+import {LinkApiEvents, LinkPageActions} from './link.actions';
+
+import {ResourceTag} from "../../../shared/models/tag.model";
 
 export const linksFeatureKey = 'links';
 
@@ -44,26 +45,13 @@ const onApiSuccessEvents: ReducerTypes<LinkState, readonly ActionCreator[]>[] = 
   ),
   on(LinkApiEvents.deleteLinkSuccess,
     (state, action) => adapter.removeOne(action.linkId, completedSuccessfully(state))
-  ),
-  on(ResourceApiEvents.loadResourcesSuccess,
-    (state, {resources}) => {
-    const updates = resources
-      .map(resource => {
-        const update: Update<Link> = {
-          id: resource.resourceId,
-          changes: { tags: resource.tags }
-        };
-        return update;
-      });
-      return adapter.updateMany(updates, completedSuccessfully(state));
-    })
+  )
 ];
 
 const onApiFailureEvents: ReducerTypes<LinkState, readonly ActionCreator[]>[] = [
   on(LinkApiEvents.loadLinksFailure,
     LinkApiEvents.saveLinkFailure,
     LinkApiEvents.deleteLinkFailure,
-    ResourceApiEvents.loadResourcesFailure,
     (state, action) => ({
       ...state,
       isLoading: false,

@@ -2,11 +2,10 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {catchError, map} from 'rxjs/operators';
 import {of, switchMap} from 'rxjs';
-import {LinkApiEvents, LinkPageActions, ResourceApiEvents} from './link.actions';
+import {LinkApiEvents, LinkPageActions} from './link.actions';
 import {LinkService} from "../link.service";
 import {Router} from "@angular/router";
 import {Notification} from "../../../reducers/root.actions";
-import {ResourceService} from "../../../shared/services/resource.service";
 
 @Injectable()
 export class LinkEffects {
@@ -21,17 +20,6 @@ export class LinkEffects {
         )
       )
     );
-  });
-
-  loadLinksSuccess$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(LinkApiEvents.loadLinksSuccess),
-      switchMap(() =>
-        this.resourceService.queryResources().pipe(
-          map(resources => ResourceApiEvents.loadResourcesSuccess({resources})),
-          catchError(error => of(ResourceApiEvents.loadResourcesFailure({error: this.unpackError(error)})))
-        ))
-    )
   });
 
   addLink$ = createEffect(() => {
@@ -82,41 +70,13 @@ export class LinkEffects {
     );
   });
 
-  tagLink$ = createEffect(() => {
+  saveLinkSuccessToRedirect$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(LinkApiEvents.saveLinkSuccess),
-      switchMap(({link}) => this.resourceService.saveTaggedResource({
-          resourceId: link.linkId,
-          name: link.name,
-          tags: link.tags
-        }).pipe(
-          map(resource => LinkApiEvents.tagLinkSuccess({resource})),
-          catchError(error => of(LinkApiEvents.tagLinkFailure({error: this.unpackError(error)})))
-        )
-      )
-    )
-  })
-
-  tagLinkCompleteToRedirect$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(LinkApiEvents.tagLinkSuccess, LinkApiEvents.tagLinkFailure),
       switchMap(() => this.router.navigate(['/links']))
     );
   }, {
     dispatch: false
-  });
-
-  tagLinkFailure$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(LinkApiEvents.tagLinkFailure),
-      switchMap(() => of(Notification({
-          notification: {
-            type: 'error',
-            message: 'Failed to tag link, please retry later.'
-          }
-        }))
-      )
-    );
   });
 
   deleteLink$ = createEffect(() => {
@@ -155,15 +115,6 @@ export class LinkEffects {
     );
   })
 
-  untagLink$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(LinkApiEvents.deleteLinkSuccess),
-      switchMap(({linkId}) => this.resourceService.deleteTaggedResource(linkId))
-    )
-  }, {
-    dispatch: false
-  })
-
   editLink$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(LinkPageActions.editLink),
@@ -175,7 +126,6 @@ export class LinkEffects {
 
   constructor(private actions$: Actions,
               private linkService: LinkService,
-              private resourceService: ResourceService,
               private router: Router) {
   }
 
